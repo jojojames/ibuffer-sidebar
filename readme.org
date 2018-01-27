@@ -26,3 +26,10 @@
       (dired-sidebar-toggle-sidebar)
       (ibuffer-sidebar-toggle-sidebar))
   #+end_src
+* Contributing
+  #+begin_src sh :tangle yes
+  cask
+  make compile
+  make test
+  make lint
+  #+end_src
