@@ -135,7 +135,7 @@ to disable automatic refresh when a special command is triggered."
   :type 'list
   :group 'ibuffer-sidebar)
 
-(defcustom ibuffer-sidebar-name "*Buffers*"
+(defcustom ibuffer-sidebar-name "*:Buffers:*"
   "The name of `ibuffer-sidebar' buffer."
   :type 'string
   :group 'ibuffer-sidebar)
@@ -253,17 +253,13 @@ buffer if buffer has a window attached to it."
 
 (defun ibuffer-sidebar-get-or-create-buffer ()
   "Get or create a `ibuffer-sidebar' buffer."
-  (let ((name (ibuffer-sidebar-buffer-name)))
+  (let ((name ibuffer-sidebar-name))
     (ibuffer-sidebar-if-let* ((existing-buffer (get-buffer name)))
         existing-buffer
       (let ((new-buffer (generate-new-buffer name)))
         (with-current-buffer new-buffer
           (ibuffer-sidebar-setup))
         new-buffer))))
-
-(defun ibuffer-sidebar-buffer-name ()
-  "Return name of `ibuffer-sidebar'."
-  ibuffer-sidebar-name)
 
 (defun ibuffer-sidebar-setup ()
   "Bootstrap `ibuffer-sidebar'.
