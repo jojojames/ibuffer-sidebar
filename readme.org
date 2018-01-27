@@ -16,3 +16,13 @@
       (setq ibuffer-sidebar-use-custom-font t)
       (setq ibuffer-sidebar-face `(:family "Helvetica" :height 140)))
   #+end_src
+
+  Sidebar can also be toggled together with [[https://github.com/jojojames/dired-sidebar][dired-sidebar]].
+
+  #+begin_src emacs-lisp :tangle yes
+    (defun +sidebar-toggle ()
+      "Toggle both `dired-sidebar' and `ibuffer-sidebar'."
+      (interactive)
+      (dired-sidebar-toggle-sidebar)
+      (ibuffer-sidebar-toggle-sidebar))
+  #+end_src
