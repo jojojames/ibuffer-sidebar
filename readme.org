@@ -1,0 +1,18 @@
+#+TITLE: IBuffer Sidebar
+
+* Screenshots
+  [[./screenshots/ibuffer-sidebar.png]]
+
+  When used with [[https://github.com/jojojames/dired-sidebar][dired-sidebar]].
+
+  [[./screenshots/with-dired-sidebar.png]]
+* Installation
+  #+begin_src emacs-lisp :tangle yes
+    (use-package ibuffer-sidebar
+      :load-path "~/.emacs.d/fork/ibuffer-sidebar"
+      :ensure nil
+      :commands (ibuffer-sidebar-toggle-sidebar)
+      :config
+      (setq ibuffer-sidebar-use-custom-font t)
+      (setq ibuffer-sidebar-face `(:family "Helvetica" :height 140)))
+  #+end_src
