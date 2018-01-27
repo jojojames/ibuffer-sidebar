@@ -237,8 +237,8 @@ to disable automatic refresh when a special command is triggered."
 (defun ibuffer-sidebar-hide-sidebar ()
   "Hide `ibuffer-sidebar' in selected frame."
   (ibuffer-sidebar-when-let* ((buffer (ibuffer-sidebar-buffer)))
-                             (delete-window (get-buffer-window buffer))
-                             (ibuffer-sidebar-update-state nil)))
+    (delete-window (get-buffer-window buffer))
+    (ibuffer-sidebar-update-state nil)))
 
 ;; Helpers
 
@@ -248,18 +248,18 @@ to disable automatic refresh when a special command is triggered."
 Check if F or `selected-frame' contains a sidebar and return corresponding
 buffer if buffer has a window attached to it."
   (ibuffer-sidebar-if-let* ((buffer (ibuffer-sidebar-buffer f)))
-                           (get-buffer-window buffer)
-                           nil))
+      (get-buffer-window buffer)
+    nil))
 
 (defun ibuffer-sidebar-get-or-create-buffer ()
   "Get or create a `ibuffer-sidebar' buffer."
   (let ((name (ibuffer-sidebar-buffer-name)))
     (ibuffer-sidebar-if-let* ((existing-buffer (get-buffer name)))
-                             existing-buffer
-                             (let ((new-buffer (generate-new-buffer name)))
-                               (with-current-buffer new-buffer
-                                 (ibuffer-sidebar-setup))
-                               new-buffer))))
+        existing-buffer
+      (let ((new-buffer (generate-new-buffer name)))
+        (with-current-buffer new-buffer
+          (ibuffer-sidebar-setup))
+        new-buffer))))
 
 (defun ibuffer-sidebar-buffer-name ()
   "Return name of `ibuffer-sidebar'."
@@ -293,8 +293,8 @@ This returns nil if there isn't a buffer for F."
 (defun ibuffer-sidebar-refresh-buffer (&rest _)
   "Refresh sidebar buffer."
   (ibuffer-sidebar-when-let* ((sidebar (ibuffer-sidebar-buffer)))
-                             (with-current-buffer sidebar
-                               (ibuffer-update nil t))))
+    (with-current-buffer sidebar
+      (ibuffer-update nil t))))
 
 ;; UI
 
