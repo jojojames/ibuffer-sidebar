@@ -288,8 +288,9 @@ This returns nil if there isn't a buffer for F."
 
 (defun ibuffer-sidebar-refresh-buffer (&rest _)
   "Refresh sidebar buffer."
-  (ibuffer-sidebar-when-let* ((sidebar (ibuffer-sidebar-buffer)))
-    (with-current-buffer sidebar
+  (ibuffer-sidebar-when-let* ((sidebar (ibuffer-sidebar-buffer))
+                              (window (get-buffer-window sidebar)))
+    (with-selected-window window
       (ibuffer-update nil t))))
 
 ;; UI
