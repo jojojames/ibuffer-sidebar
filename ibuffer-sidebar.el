@@ -152,61 +152,58 @@ to disable automatic refresh when a special command is triggered."
   :init-value nil
   :lighter ""
   :keymap ibuffer-sidebar-mode-map
-  (setq buffer-read-only nil)
-  (setq window-size-fixed 'width)
+  (let ((inhibit-read-only t))
+    (setq window-size-fixed 'width)
 
-  (when ibuffer-sidebar-use-custom-font
-    (ibuffer-sidebar-set-font))
+    (when ibuffer-sidebar-use-custom-font
+      (ibuffer-sidebar-set-font))
 
-  ;; Remove column titles.
-  (unless ibuffer-sidebar-display-column-titles
-    (advice-add 'ibuffer-update-title-and-summary
-                :around 'ibuffer-sidebar-remove-column-headings))
+    ;; Remove column titles.
+    (unless ibuffer-sidebar-display-column-titles
+      (advice-add 'ibuffer-update-title-and-summary
+                  :around 'ibuffer-sidebar-remove-column-headings))
 
-  ;; Hide summary.
-  (unless ibuffer-sidebar-display-summary
-    (setq-local ibuffer-display-summary nil))
+    ;; Hide summary.
+    (unless ibuffer-sidebar-display-summary
+      (setq-local ibuffer-display-summary nil))
 
-  ;; Set default format to be minimal.
-  (setq-local ibuffer-formats (append ibuffer-formats '((mark " " name))))
-  (setq-local ibuffer-current-format (1- (length ibuffer-formats)))
-  (ibuffer-update-format)
-  (ibuffer-redisplay t)
+    ;; Set default format to be minimal.
+    (setq-local ibuffer-formats (append ibuffer-formats '((mark " " name))))
+    (setq-local ibuffer-current-format (1- (length ibuffer-formats)))
+    (ibuffer-update-format)
+    (ibuffer-redisplay t)
 
-  ;; Set to readonly.
-  (setq buffer-read-only t)
+    ;; Set up refresh.
+    (when ibuffer-sidebar-refresh-on-special-commands
+      (mapc
+       (lambda (x)
+         (if (consp x)
+             (let ((command (car x))
+                   (delay (cdr x)))
+               (advice-add
+                command
+                :after
+                (defalias (intern (format "ibuffer-sidebar-refresh-after-%S" command))
+                  (function
+                   (lambda (&rest _)
+                     (let ((timer-symbol
+                            (intern
+                             (format
+                              "ibuffer-sidebar-refresh-%S-timer" command))))
+                       (when (and (boundp timer-symbol)
+                                  (timerp (symbol-value timer-symbol)))
+                         (cancel-timer (symbol-value timer-symbol)))
+                       (setf
+                        (symbol-value timer-symbol)
+                        (run-with-idle-timer
+                         delay
+                         nil
+                         #'ibuffer-sidebar-refresh-buffer))))))))
+           (advice-add x :after #'ibuffer-sidebar-refresh-buffer)))
+       ibuffer-sidebar-special-refresh-commands))
 
-  ;; Set up refresh.
-  (when ibuffer-sidebar-refresh-on-special-commands
-    (mapc
-     (lambda (x)
-       (if (consp x)
-           (let ((command (car x))
-                 (delay (cdr x)))
-             (advice-add
-              command
-              :after
-              (defalias (intern (format "ibuffer-sidebar-refresh-after-%S" command))
-                (function
-                 (lambda (&rest _)
-                   (let ((timer-symbol
-                          (intern
-                           (format
-                            "ibuffer-sidebar-refresh-%S-timer" command))))
-                     (when (and (boundp timer-symbol)
-                                (timerp (symbol-value timer-symbol)))
-                       (cancel-timer (symbol-value timer-symbol)))
-                     (setf
-                      (symbol-value timer-symbol)
-                      (run-with-idle-timer
-                       delay
-                       nil
-                       #'ibuffer-sidebar-refresh-buffer))))))))
-         (advice-add x :after #'ibuffer-sidebar-refresh-buffer)))
-     ibuffer-sidebar-special-refresh-commands))
-
-  (when ibuffer-sidebar-use-custom-modeline
-    (ibuffer-sidebar-set-mode-line)))
+    (when ibuffer-sidebar-use-custom-modeline
+      (ibuffer-sidebar-set-mode-line))))
 
 ;; User Interface
 
