@@ -54,7 +54,7 @@
 ;; Customizations
 (defgroup ibuffer-sidebar nil
   "A major mode leveraging `ibuffer-sidebar' to display buffers in a sidebar."
-  :group 'development)
+  :group 'convenience)
 
 (defcustom ibuffer-sidebar-use-custom-modeline t
   "Show `ibuffer-sidebar' with custom modeline.
