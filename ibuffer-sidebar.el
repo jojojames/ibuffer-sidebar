@@ -161,7 +161,7 @@ to disable automatic refresh when a special command is triggered."
     ;; Remove column titles.
     (unless ibuffer-sidebar-display-column-titles
       (advice-add 'ibuffer-update-title-and-summary
-                  :around 'ibuffer-sidebar-remove-column-headings))
+                  :after 'ibuffer-sidebar-remove-column-headings))
 
     ;; Hide summary.
     (unless ibuffer-sidebar-display-summary
@@ -292,14 +292,13 @@ This returns nil if there isn't a buffer for F."
 
 ;; UI
 
-(defun ibuffer-sidebar-remove-column-headings (f &rest args)
+(defun ibuffer-sidebar-remove-column-headings (&rest _args)
   "Function ran after `ibuffer-update-title-and-summary' that removes headings.
 
 F should be function `ibuffer-update-title-and-summary'.
 ARGS are args for `ibuffer-update-title-and-summary'."
-  (apply f args)
-  (when (and (not ibuffer-sidebar-display-column-titles)
-             (bound-and-true-p ibuffer-sidebar-mode))
+  (when (and (bound-and-true-p ibuffer-sidebar-mode)
+             (not ibuffer-sidebar-display-column-titles))
     (with-current-buffer (current-buffer)
       (goto-char 1)
       (search-forward "-\n" nil t)
