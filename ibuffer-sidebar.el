@@ -122,9 +122,9 @@ Warning: This is implemented by advising specific functions."
   :group 'ibuffer-sidebar)
 
 (defcustom ibuffer-sidebar-special-refresh-commands
-  '((kill-buffer . 3)
-    (find-file . 3)
-    (delete-file . 3))
+  '((kill-buffer . 2)
+    (find-file . 2)
+    (delete-file . 2))
   "A list of commands that will trigger a refresh of the sidebar.
 
 The command can be an alist with the CDR of the alist being the amount of time
