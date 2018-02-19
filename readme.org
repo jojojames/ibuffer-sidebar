@@ -1,5 +1,8 @@
 #+TITLE: IBuffer Sidebar
 
+[[https://travis-ci.org/jojojames/ibuffer-sidebar][file:https://travis-ci.org/jojojames/ibuffer-sidebar.svg?branch=master]]
+[[https://melpa.org/#/ibuffer-sidebar][file:https://melpa.org/packages/ibuffer-sidebar-badge.svg]]
+
 * Screenshots
   [[./screenshots/ibuffer-sidebar.png]]
 
