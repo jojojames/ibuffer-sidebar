@@ -142,16 +142,10 @@ to disable automatic refresh when a special command is triggered."
 
 ;; Mode
 
-(defvar ibuffer-sidebar-mode-map
-  (let ((map (make-sparse-keymap)))
-    map)
-  "Keymap used for symbol `ibuffer-sidebar-mode'.")
-
-(define-minor-mode ibuffer-sidebar-mode
-  "A minor mode that puts `ibuffer' in a sidebar."
-  :init-value nil
-  :lighter ""
-  :keymap ibuffer-sidebar-mode-map
+(define-derived-mode ibuffer-sidebar-mode ibuffer-mode
+  "Ibuffer-sidebar"
+  "A major mode that puts `ibuffer' in a sidebar."
+  :group 'ibuffer-sidebar
   (let ((inhibit-read-only t))
     (setq window-size-fixed 'width)
 
