@@ -232,6 +232,7 @@ to disable automatic refresh when a special command is triggered."
     (display-buffer-in-side-window buffer ibuffer-sidebar-display-alist)
     (let ((window (get-buffer-window buffer)))
       (set-window-dedicated-p window t)
+      (set-window-parameter window 'no-delete-other-windows t)
       (with-selected-window window
         (let ((window-size-fixed))
           (ibuffer-sidebar-set-width ibuffer-sidebar-width))))
