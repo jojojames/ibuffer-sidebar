@@ -145,6 +145,11 @@ to disable automatic refresh when a special command is triggered."
   :type 'integer
   :group 'ibuffer-sidebar)
 
+(defcustom ibuffer-sidebar-formats
+  '((mark " " name))
+  "`ibuffer-formats' for `ibuffer-sidebar'."
+  :type 'list
+  :group 'ibuffer-sidebar)
 
 ;; Mode
 
@@ -168,7 +173,7 @@ to disable automatic refresh when a special command is triggered."
       (setq-local ibuffer-display-summary nil))
 
     ;; Set default format to be minimal.
-    (setq-local ibuffer-formats (append ibuffer-formats '((mark " " name))))
+    (setq-local ibuffer-formats (append ibuffer-formats ibuffer-sidebar-formats))
     (setq-local ibuffer-current-format (1- (length ibuffer-formats)))
     (ibuffer-update-format)
     (ibuffer-redisplay t)
