@@ -143,7 +143,7 @@ to disable automatic refresh when a special command is triggered."
   :type 'string
   :group 'ibuffer-sidebar)
 
-(defcustom ibuffer-sidebar-refresh-timer 3
+(defcustom ibuffer-sidebar-refresh-timer 10
   "Refresh sidebar every N seconds. If nil then do not refresh."
   :type 'integer
   :group 'ibuffer-sidebar)
