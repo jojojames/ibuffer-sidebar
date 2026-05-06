@@ -315,7 +315,8 @@ and sort alphabetically on sidebar open."
   "Maybe set up `ibuffer-vc'.'"
   (when ibuffer-sidebar-use-ibuffer-vc-integration
     (with-eval-after-load 'ibuffer-vc
-      (ibuffer-vc-set-filter-groups-by-vc-root)
+      (let ((inhibit-message t))
+        (ibuffer-vc-set-filter-groups-by-vc-root))
       (unless (eq ibuffer-sorting-mode 'alphabetic)
         (ibuffer-do-sort-by-alphabetic)))))
 
