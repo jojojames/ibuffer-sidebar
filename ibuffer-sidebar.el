@@ -68,7 +68,7 @@ This uses format specified by `ibuffer-sidebar-mode-line-format'."
     mode-line-buffer-identification
     " "  mode-line-end-spaces)
   "Mode line format for `ibuffer-sidebar'."
-  :type 'list
+  :type '(repeat sexp)
   :group 'ibuffer-sidebar)
 
 (defcustom ibuffer-sidebar-display-column-titles nil
@@ -110,7 +110,7 @@ This only takes effect if `ibuffer-sidebar-use-custom-font' is true."
 (defcustom ibuffer-sidebar-display-alist '((side . left) (slot . 1))
   "Alist used in `display-buffer-in-side-window'.
 
-e.g. (display-buffer-in-side-window buffer '((side . left) (slot . 1)))"
+e.g. (display-buffer-in-side-window buffer \\='((side . left) (slot . 1)))"
   :type 'alist
   :group 'ibuffer-sidebar)
 
@@ -132,7 +132,7 @@ to wait to refresh the sidebar after the CAR of the alist is called.
 
 Set this to nil or set `ibuffer-sidebar-refresh-on-special-commands' to nil
 to disable automatic refresh when a special command is triggered."
-  :type 'list
+  :type '(repeat (choice symbol (cons symbol integer)))
   :group 'ibuffer-sidebar)
 
 (defcustom ibuffer-sidebar-name "*:Buffers:*"
@@ -148,7 +148,7 @@ to disable automatic refresh when a special command is triggered."
 (defcustom ibuffer-sidebar-formats
   '((mark " " name))
   "`ibuffer-formats' for `ibuffer-sidebar'."
-  :type 'list
+  :type '(repeat (repeat sexp))
   :group 'ibuffer-sidebar)
 
 (defcustom ibuffer-sidebar-toggle-hidden-commands
@@ -405,10 +405,9 @@ If it's not showing, act as `ibuffer-sidebar-toggle-sidebar'."
   "Hide the sidebar before executing F with ARGS, then restore it."
   (if (not (ibuffer-sidebar-showing-sidebar-p))
       (apply f args)
-    (let ((sidebar (ibuffer-sidebar-buffer)))
-      (ibuffer-sidebar-hide-sidebar)
-      (apply f args)
-      (ibuffer-sidebar-show-sidebar))))
+    (ibuffer-sidebar-hide-sidebar)
+    (apply f args)
+    (ibuffer-sidebar-show-sidebar)))
 
 (provide 'ibuffer-sidebar)
 ;;; ibuffer-sidebar.el ends here
