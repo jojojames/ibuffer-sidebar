@@ -390,6 +390,16 @@ Set font to a variable width (proportional) in the current buffer."
   "Customize modeline in `ibuffer-sidebar'."
   (setq mode-line-format ibuffer-sidebar-mode-line-format))
 
+;;;###autoload
+(defun ibuffer-sidebar-jump-to-sidebar ()
+  "Jump to `ibuffer-sidebar' buffer if it is showing.
+
+If it's not showing, act as `ibuffer-sidebar-toggle-sidebar'."
+  (interactive)
+  (if (ibuffer-sidebar-showing-sidebar-p)
+      (select-window
+       (get-buffer-window (ibuffer-sidebar-buffer)))
+    (call-interactively #'ibuffer-sidebar-toggle-sidebar)))
 
 (defun ibuffer-sidebar-advice-hide-temporarily (f &rest args)
   "Hide the sidebar before executing F with ARGS, then restore it."
