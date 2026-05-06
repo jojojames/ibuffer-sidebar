@@ -151,6 +151,16 @@ to disable automatic refresh when a special command is triggered."
   :type 'list
   :group 'ibuffer-sidebar)
 
+
+(defcustom ibuffer-sidebar-window-fixed 'width
+  "Whether the sidebar window size is fixed.
+
+Possible values: nil, `width', `height'."
+  :type '(choice (const :tag "Not fixed" nil)
+                 (const :tag "Fixed width" width)
+                 (const :tag "Fixed height" height))
+  :group 'ibuffer-sidebar)
+
 ;; Mode
 
 (define-derived-mode ibuffer-sidebar-mode ibuffer-mode
@@ -158,7 +168,7 @@ to disable automatic refresh when a special command is triggered."
   "A major mode that puts `ibuffer' in a sidebar."
   :group 'ibuffer-sidebar
   (let ((inhibit-read-only t))
-    (setq window-size-fixed 'width)
+    (setq window-size-fixed ibuffer-sidebar-window-fixed)
 
     (when ibuffer-sidebar-use-custom-font
       (ibuffer-sidebar-set-font))
