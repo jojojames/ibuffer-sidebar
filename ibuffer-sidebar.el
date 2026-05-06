@@ -327,16 +327,16 @@ Sets up both `ibuffer' and `ibuffer-sidebar'."
   (run-hooks 'ibuffer-hook)
   (ibuffer-sidebar-mode))
 
-(defun ibuffer-sidebar-buffer (&optional f)
-  "Return the current sidebar buffer in F or selected frame.
-
-This returns nil if there isn't a buffer for F."
-  (let* ((frame (or f (selected-frame)))
-         (buffer (frame-parameter frame 'ibuffer-sidebar)))
-    (if (buffer-live-p buffer)
-        buffer
-      (set-frame-parameter frame 'ibuffer-sidebar nil)
-      nil)))
+(defun ibuffer-sidebar-buffer (&optional _frame)
+  "Return the current sidebar buffer using `window-list'."
+  (if-let* ((windows (seq-filter
+                      (lambda (w)
+                        (with-current-buffer (window-buffer w)
+                          (eq major-mode 'ibuffer-sidebar-mode)))
+                      (window-list)))
+            (buffer (window-buffer (car windows))))
+      buffer
+    nil))
 
 (defun ibuffer-sidebar-update-state (buffer &optional f)
   "Update current state with BUFFER for sidebar in F or selected frame."
