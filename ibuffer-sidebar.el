@@ -162,6 +162,15 @@ Set this to nil to disable this behavior."
   :type 'hook
   :group 'ibuffer-sidebar)
 
+(defcustom ibuffer-sidebar-no-delete-other-windows nil
+  "Whether the sidebar window is marked as no-delete-other-windows."
+  :type 'boolean
+  :group 'ibuffer-sidebar)
+
+(defcustom ibuffer-sidebar-resize-on-open t
+  "Whether to resize the sidebar window when opening it."
+  :type 'boolean
+  :group 'ibuffer-sidebar)
 
 (defcustom ibuffer-sidebar-window-fixed 'width
   "Whether the sidebar window size is fixed.
@@ -273,10 +282,12 @@ Possible values: nil, `width', `height'."
     (display-buffer-in-side-window buffer ibuffer-sidebar-display-alist)
     (let ((window (get-buffer-window buffer)))
       (set-window-dedicated-p window t)
-      (set-window-parameter window 'no-delete-other-windows t)
-      (with-selected-window window
-        (let ((window-size-fixed))
-          (ibuffer-sidebar-set-width ibuffer-sidebar-width))))
+      (when ibuffer-sidebar-no-delete-other-windows
+        (set-window-parameter window 'no-delete-other-windows t))
+      (when ibuffer-sidebar-resize-on-open
+        (with-selected-window window
+          (let ((window-size-fixed))
+            (ibuffer-sidebar-set-width ibuffer-sidebar-width)))))
     (ibuffer-sidebar-update-state buffer)))
 
 ;;;###autoload
