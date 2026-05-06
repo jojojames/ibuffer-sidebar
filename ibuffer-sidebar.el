@@ -163,6 +163,9 @@ Possible values: nil, `width', `height'."
 
 ;; Mode
 
+(defvar-local ibuffer-sidebar-refresh-timer-object nil
+  "Timer object for `ibuffer-sidebar' auto-refresh.")
+
 (define-derived-mode ibuffer-sidebar-mode ibuffer-mode
   "Ibuffer-sidebar"
   "A major mode that puts `ibuffer' in a sidebar."
@@ -190,10 +193,16 @@ Possible values: nil, `width', `height'."
 
     ;; Set up refresh on timer.
     (when ibuffer-sidebar-refresh-timer
-      (run-with-idle-timer
-       ibuffer-sidebar-refresh-timer
-       1
-       #'ibuffer-sidebar-refresh-buffer))
+      (setq ibuffer-sidebar-refresh-timer-object
+            (run-with-idle-timer
+             ibuffer-sidebar-refresh-timer
+             1
+             #'ibuffer-sidebar-refresh-buffer))
+      (add-hook 'kill-buffer-hook
+                (lambda ()
+                  (when (timerp ibuffer-sidebar-refresh-timer-object)
+                    (cancel-timer ibuffer-sidebar-refresh-timer-object)))
+                nil t))
 
     ;; Set up refresh on special commands.
     (when ibuffer-sidebar-refresh-on-special-commands
