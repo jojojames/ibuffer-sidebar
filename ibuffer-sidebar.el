@@ -192,10 +192,23 @@ and sort alphabetically on sidebar open."
   :type 'boolean
   :group 'ibuffer-sidebar)
 
+(defcustom ibuffer-sidebar-open-file-in-most-recently-used-window t
+  "Whether or not to open buffers in most recently used window."
+  :type 'boolean
+  :group 'ibuffer-sidebar)
+
 ;; Mode
 
 (defvar-local ibuffer-sidebar-refresh-timer-object nil
   "Timer object for `ibuffer-sidebar' auto-refresh.")
+
+(defvar ibuffer-sidebar-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-m") 'ibuffer-sidebar-visit-buffer)
+    (define-key map (kbd "RET") 'ibuffer-sidebar-visit-buffer)
+    (define-key map (kbd "<return>") 'ibuffer-sidebar-visit-buffer)
+    map)
+  "Keymap used for symbol `ibuffer-sidebar-mode'.")
 
 (define-derived-mode ibuffer-sidebar-mode ibuffer-mode
   "Ibuffer-sidebar"
@@ -422,6 +435,16 @@ If it's not showing, act as `ibuffer-sidebar-toggle-sidebar'."
       (select-window
        (get-buffer-window (ibuffer-sidebar-buffer)))
     (call-interactively #'ibuffer-sidebar-toggle-sidebar)))
+
+(defun ibuffer-sidebar-visit-buffer ()
+  "Visit the buffer at point, selecting the appropriate window."
+  (interactive)
+  (ibuffer-sidebar-when-let* ((buf (ibuffer-current-buffer t)))
+    (select-window
+     (if ibuffer-sidebar-open-file-in-most-recently-used-window
+         (get-mru-window)
+       (next-window)))
+    (switch-to-buffer buf)))
 
 (defun ibuffer-sidebar-advice-hide-temporarily (f &rest args)
   "Hide the sidebar before executing F with ARGS, then restore it."
