@@ -100,11 +100,11 @@ This face can be customized using `ibuffer-sidebar-face'."
   :type 'boolean
   :group 'ibuffer-sidebar)
 
-(defcustom ibuffer-sidebar-face nil
+(defface ibuffer-sidebar-face
+  nil
   "Face used by `ibuffer-sidebar' for custom font.
 
 This only takes effect if `ibuffer-sidebar-use-custom-font' is true."
-  :type 'list
   :group 'ibuffer-sidebar)
 
 (defcustom ibuffer-sidebar-display-alist '((side . left) (slot . 1))
@@ -336,7 +336,7 @@ ARGS are args for `ibuffer-update-title-and-summary'."
 
 Set font to a variable width (proportional) in the current buffer."
   (interactive)
-  (setq-local buffer-face-mode-face ibuffer-sidebar-face)
+  (setq-local buffer-face-mode-face 'ibuffer-sidebar-face)
   (buffer-face-mode))
 
 (defun ibuffer-sidebar-set-mode-line ()
