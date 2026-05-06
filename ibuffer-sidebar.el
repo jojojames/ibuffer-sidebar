@@ -38,6 +38,9 @@
 (require 'face-remap)
 (eval-when-compile (require 'subr-x))
 
+(declare-function ibuffer-vc-set-filter-groups-by-vc-root "ibuffer-vc")
+(declare-function ibuffer-do-sort-by-alphabetic "ibuffer")
+
 ;; Compatibility
 
 (eval-and-compile
@@ -181,6 +184,14 @@ Possible values: nil, `width', `height'."
                  (const :tag "Fixed height" height))
   :group 'ibuffer-sidebar)
 
+(defcustom ibuffer-sidebar-use-ibuffer-vc-integration t
+  "Whether to integrate with `ibuffer-vc'.
+
+When true and `ibuffer-vc' is loaded, group buffers by VC root
+and sort alphabetically on sidebar open."
+  :type 'boolean
+  :group 'ibuffer-sidebar)
+
 ;; Mode
 
 (defvar-local ibuffer-sidebar-refresh-timer-object nil
@@ -209,6 +220,7 @@ Possible values: nil, `width', `height'."
     (setq-local ibuffer-formats (append ibuffer-formats ibuffer-sidebar-formats))
     (setq-local ibuffer-current-format (1- (length ibuffer-formats)))
     (ibuffer-update-format)
+    (ibuffer-sidebar-maybe-setup-vc)
     (ibuffer-redisplay t)
 
     ;; Set up refresh on timer.
@@ -299,6 +311,14 @@ Possible values: nil, `width', `height'."
 
 ;; Helpers
 
+(defun ibuffer-sidebar-maybe-setup-vc ()
+  "Maybe set up `ibuffer-vc'.'"
+  (when ibuffer-sidebar-use-ibuffer-vc-integration
+    (with-eval-after-load 'ibuffer-vc
+      (ibuffer-vc-set-filter-groups-by-vc-root)
+      (unless (eq ibuffer-sorting-mode 'alphabetic)
+        (ibuffer-do-sort-by-alphabetic)))))
+
 (defun ibuffer-sidebar-showing-sidebar-p (&optional f)
   "Return whether F or `selected-frame' is showing `ibuffer-sidebar'.
 
@@ -348,7 +368,8 @@ Sets up both `ibuffer' and `ibuffer-sidebar'."
   (ibuffer-sidebar-when-let* ((sidebar (ibuffer-sidebar-buffer))
                               (window (get-buffer-window sidebar)))
     (with-selected-window window
-      (ibuffer-update nil t))))
+      (ibuffer-update nil t)
+      (ibuffer-sidebar-maybe-setup-vc))))
 
 ;; UI
 
