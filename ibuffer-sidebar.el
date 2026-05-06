@@ -151,6 +151,17 @@ to disable automatic refresh when a special command is triggered."
   :type 'list
   :group 'ibuffer-sidebar)
 
+(defcustom ibuffer-sidebar-toggle-hidden-commands
+  '(balance-windows)
+  "A list of commands that will hide `ibuffer-sidebar' temporarily.
+
+When the command is triggered, `ibuffer-sidebar' will hide itself until
+the command completes.
+
+Set this to nil to disable this behavior."
+  :type 'hook
+  :group 'ibuffer-sidebar)
+
 
 (defcustom ibuffer-sidebar-window-fixed 'width
   "Whether the sidebar window size is fixed.
@@ -232,6 +243,12 @@ Possible values: nil, `width', `height'."
                          #'ibuffer-sidebar-refresh-buffer))))))))
            (advice-add x :after #'ibuffer-sidebar-refresh-buffer)))
        ibuffer-sidebar-special-refresh-commands))
+
+    (when ibuffer-sidebar-toggle-hidden-commands
+      (mapc
+       (lambda (x)
+         (advice-add x :around #'ibuffer-sidebar-advice-hide-temporarily))
+       ibuffer-sidebar-toggle-hidden-commands))
 
     (when ibuffer-sidebar-use-custom-modeline
       (ibuffer-sidebar-set-mode-line))))
@@ -361,6 +378,16 @@ Set font to a variable width (proportional) in the current buffer."
 (defun ibuffer-sidebar-set-mode-line ()
   "Customize modeline in `ibuffer-sidebar'."
   (setq mode-line-format ibuffer-sidebar-mode-line-format))
+
+
+(defun ibuffer-sidebar-advice-hide-temporarily (f &rest args)
+  "Hide the sidebar before executing F with ARGS, then restore it."
+  (if (not (ibuffer-sidebar-showing-sidebar-p))
+      (apply f args)
+    (let ((sidebar (ibuffer-sidebar-buffer)))
+      (ibuffer-sidebar-hide-sidebar)
+      (apply f args)
+      (ibuffer-sidebar-show-sidebar))))
 
 (provide 'ibuffer-sidebar)
 ;;; ibuffer-sidebar.el ends here
