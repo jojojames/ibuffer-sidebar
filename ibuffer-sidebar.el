@@ -1,6 +1,6 @@
 ;;; ibuffer-sidebar.el --- Sidebar for `ibuffer' -*- lexical-binding: t -*-
 
-;; Copyright (C) 2018 James Nguyen
+;; Copyright (C) 2018  Free Software Foundation, Inc.
 
 ;; Author: James Nguyen <james@jojojames.com>
 ;; Maintainer: James Nguyen <james@jojojames.com>
@@ -45,7 +45,7 @@
 
 (eval-and-compile
   (with-no-warnings
-    (if (version< emacs-version "26")
+    (if (< emacs-major-version 26)
         (progn
           (defalias 'ibuffer-sidebar-if-let* #'if-let)
           (defalias 'ibuffer-sidebar-when-let* #'when-let)
@@ -63,66 +63,56 @@
   "Show `ibuffer-sidebar' with custom modeline.
 
 This uses format specified by `ibuffer-sidebar-mode-line-format'."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defcustom ibuffer-sidebar-mode-line-format
   '("%e" mode-line-front-space
     mode-line-buffer-identification
     " "  mode-line-end-spaces)
   "Mode line format for `ibuffer-sidebar'."
-  :type '(repeat sexp)
-  :group 'ibuffer-sidebar)
+  :type '(repeat sexp))
 
 (defcustom ibuffer-sidebar-display-column-titles nil
   "Whether or not to display the column titles in sidebar."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defcustom ibuffer-sidebar-display-summary nil
   "Whether or not to display summary in sidebar."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defcustom ibuffer-sidebar-width 35
   "Width of the `ibuffer-sidebar' buffer."
-  :type 'integer
-  :group 'ibuffer-sidebar)
+  :type 'integer)
 
 (defcustom ibuffer-sidebar-pop-to-sidebar-on-toggle-open t
   "Whether to jump to sidebar upon toggling open.
 
 This is used in conjunction with `ibuffer-sidebar-toggle-sidebar'."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defcustom ibuffer-sidebar-use-custom-font nil
   "Show `ibuffer-sidebar' with custom font.
 
 This face can be customized using `ibuffer-sidebar-face'."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defface ibuffer-sidebar-face
   nil
   "Face used by `ibuffer-sidebar' for custom font.
 
-This only takes effect if `ibuffer-sidebar-use-custom-font' is true."
-  :group 'ibuffer-sidebar)
+This only takes effect if `ibuffer-sidebar-use-custom-font' is true.")
 
 (defcustom ibuffer-sidebar-display-alist '((side . left) (slot . 1))
   "Alist used in `display-buffer-in-side-window'.
 
 e.g. (display-buffer-in-side-window buffer \\='((side . left) (slot . 1)))"
-  :type 'alist
-  :group 'ibuffer-sidebar)
+  :type 'alist)
 
 (defcustom ibuffer-sidebar-refresh-on-special-commands t
   "Whether or not to trigger auto-revert after certain functions.
 
 Warning: This is implemented by advising specific functions."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defcustom ibuffer-sidebar-special-refresh-commands
   '((kill-buffer . 2)
@@ -135,24 +125,20 @@ to wait to refresh the sidebar after the CAR of the alist is called.
 
 Set this to nil or set `ibuffer-sidebar-refresh-on-special-commands' to nil
 to disable automatic refresh when a special command is triggered."
-  :type '(repeat (choice symbol (cons symbol integer)))
-  :group 'ibuffer-sidebar)
+  :type '(repeat (choice symbol (cons symbol integer))))
 
 (defcustom ibuffer-sidebar-name "*:Buffers:*"
   "The name of `ibuffer-sidebar' buffer."
-  :type 'string
-  :group 'ibuffer-sidebar)
+  :type 'string)
 
 (defcustom ibuffer-sidebar-refresh-timer 10
   "Refresh sidebar every N seconds. If nil then do not refresh."
-  :type 'integer
-  :group 'ibuffer-sidebar)
+  :type 'integer)
 
 (defcustom ibuffer-sidebar-formats
   '((mark " " name))
   "`ibuffer-formats' for `ibuffer-sidebar'."
-  :type '(repeat (repeat sexp))
-  :group 'ibuffer-sidebar)
+  :type '(repeat (repeat sexp)))
 
 (defcustom ibuffer-sidebar-toggle-hidden-commands
   '(balance-windows)
@@ -162,18 +148,15 @@ When the command is triggered, `ibuffer-sidebar' will hide itself until
 the command completes.
 
 Set this to nil to disable this behavior."
-  :type 'hook
-  :group 'ibuffer-sidebar)
+  :type 'hook)
 
 (defcustom ibuffer-sidebar-no-delete-other-windows nil
   "Whether the sidebar window is marked as no-delete-other-windows."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defcustom ibuffer-sidebar-resize-on-open t
   "Whether to resize the sidebar window when opening it."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defcustom ibuffer-sidebar-window-fixed 'width
   "Whether the sidebar window size is fixed.
@@ -181,21 +164,18 @@ Set this to nil to disable this behavior."
 Possible values: nil, `width', `height'."
   :type '(choice (const :tag "Not fixed" nil)
                  (const :tag "Fixed width" width)
-                 (const :tag "Fixed height" height))
-  :group 'ibuffer-sidebar)
+                 (const :tag "Fixed height" height)))
 
 (defcustom ibuffer-sidebar-use-ibuffer-vc-integration t
   "Whether to integrate with `ibuffer-vc'.
 
 When true and `ibuffer-vc' is loaded, group buffers by VC root
 and sort alphabetically on sidebar open."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 (defcustom ibuffer-sidebar-open-file-in-most-recently-used-window t
   "Whether or not to open buffers in most recently used window."
-  :type 'boolean
-  :group 'ibuffer-sidebar)
+  :type 'boolean)
 
 ;; Mode
 
@@ -204,9 +184,7 @@ and sort alphabetically on sidebar open."
 
 (defvar ibuffer-sidebar-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-m") 'ibuffer-sidebar-visit-buffer)
-    (define-key map (kbd "RET") 'ibuffer-sidebar-visit-buffer)
-    (define-key map (kbd "<return>") 'ibuffer-sidebar-visit-buffer)
+    (define-key map (kbd "RET") #'ibuffer-sidebar-visit-buffer)
     map)
   "Keymap used for symbol `ibuffer-sidebar-mode'.")
 
@@ -223,7 +201,7 @@ and sort alphabetically on sidebar open."
     ;; Remove column titles.
     (unless ibuffer-sidebar-display-column-titles
       (advice-add 'ibuffer-update-title-and-summary
-                  :after 'ibuffer-sidebar-remove-column-headings))
+                  :after #'ibuffer-sidebar-remove-column-headings))
 
     ;; Hide summary.
     (unless ibuffer-sidebar-display-summary
