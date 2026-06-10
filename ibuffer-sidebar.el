@@ -132,7 +132,7 @@ to disable automatic refresh when a special command is triggered."
   :type 'string)
 
 (defcustom ibuffer-sidebar-refresh-timer 10
-  "Refresh sidebar every N seconds. If nil then do not refresh."
+  "Refresh sidebar every N seconds.  If nil then do not refresh."
   :type 'integer)
 
 (defcustom ibuffer-sidebar-formats
@@ -303,7 +303,7 @@ and sort alphabetically on sidebar open."
 ;; Helpers
 
 (defun ibuffer-sidebar-maybe-setup-vc ()
-  "Maybe set up `ibuffer-vc'.'"
+  "Maybe set up `ibuffer-vc'."
   (when ibuffer-sidebar-use-ibuffer-vc-integration
     (with-eval-after-load 'ibuffer-vc
       (let ((inhibit-message t))
@@ -366,7 +366,7 @@ Sets up both `ibuffer' and `ibuffer-sidebar'."
 ;; UI
 
 (defun ibuffer-sidebar-remove-column-headings (&rest _args)
-  "Function ran after `ibuffer-update-title-and-summary' that removes headings.
+  "Function ran after `ibuffer-update-title-and-summary' that remove headings.
 
 F should be function `ibuffer-update-title-and-summary'.
 ARGS are args for `ibuffer-update-title-and-summary'."
