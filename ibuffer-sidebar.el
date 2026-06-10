@@ -38,8 +38,9 @@
 (require 'face-remap)
 (eval-when-compile (require 'subr-x))
 
-(declare-function ibuffer-vc-set-filter-groups-by-vc-root "ibuffer-vc")
+(declare-function ibuffer-vc-generate-filter-groups-by-vc-root "ibuffer-vc")
 (declare-function ibuffer-do-sort-by-alphabetic "ibuffer")
+(defvar ibuffer-filter-groups)
 
 ;; Customizations
 (defgroup ibuffer-sidebar nil
@@ -293,8 +294,11 @@ and sort alphabetically on sidebar open."
   "Maybe set up `ibuffer-vc'."
   (when ibuffer-sidebar-use-ibuffer-vc-integration
     (with-eval-after-load 'ibuffer-vc
-      (let ((inhibit-message t))
-        (ibuffer-vc-set-filter-groups-by-vc-root))
+      ;; Set filter groups directly via the generator to avoid
+      ;; `ibuffer-vc-set-filter-groups-by-vc-root', which calls
+      ;; `pop-to-buffer' on `*Ibuffer*' if that buffer is alive.
+      (setq ibuffer-filter-groups
+            (ibuffer-vc-generate-filter-groups-by-vc-root))
       (unless (eq ibuffer-sorting-mode 'alphabetic)
         (ibuffer-do-sort-by-alphabetic)))))
 
