@@ -41,19 +41,6 @@
 (declare-function ibuffer-vc-set-filter-groups-by-vc-root "ibuffer-vc")
 (declare-function ibuffer-do-sort-by-alphabetic "ibuffer")
 
-;; Compatibility
-
-(eval-and-compile
-  (with-no-warnings
-    (if (< emacs-major-version 26)
-        (progn
-          (defalias 'ibuffer-sidebar-if-let* #'if-let)
-          (defalias 'ibuffer-sidebar-when-let* #'when-let)
-          (function-put #'ibuffer-sidebar-if-let* 'lisp-indent-function 2)
-          (function-put #'ibuffer-sidebar-when-let* 'lisp-indent-function 1))
-      (defalias 'ibuffer-sidebar-if-let* #'if-let*)
-      (defalias 'ibuffer-sidebar-when-let* #'when-let*))))
-
 ;; Customizations
 (defgroup ibuffer-sidebar nil
   "A major mode leveraging `ibuffer-sidebar' to display buffers in a sidebar."
@@ -296,7 +283,7 @@ and sort alphabetically on sidebar open."
 ;;;###autoload
 (defun ibuffer-sidebar-hide-sidebar ()
   "Hide `ibuffer-sidebar' in selected frame."
-  (ibuffer-sidebar-when-let* ((buffer (ibuffer-sidebar-buffer)))
+  (when-let* ((buffer (ibuffer-sidebar-buffer)))
     (delete-window (get-buffer-window buffer))
     (ibuffer-sidebar-update-state nil)))
 
@@ -316,14 +303,14 @@ and sort alphabetically on sidebar open."
 
 Check if F or `selected-frame' contains a sidebar and return corresponding
 buffer if buffer has a window attached to it."
-  (ibuffer-sidebar-if-let* ((buffer (ibuffer-sidebar-buffer f)))
+  (if-let* ((buffer (ibuffer-sidebar-buffer f)))
       (get-buffer-window buffer)
     nil))
 
 (defun ibuffer-sidebar-get-or-create-buffer ()
   "Get or create a `ibuffer-sidebar' buffer."
   (let ((name ibuffer-sidebar-name))
-    (ibuffer-sidebar-if-let* ((existing-buffer (get-buffer name)))
+    (if-let* ((existing-buffer (get-buffer name)))
         existing-buffer
       (let ((new-buffer (generate-new-buffer name)))
         (with-current-buffer new-buffer
@@ -357,7 +344,7 @@ Sets up both `ibuffer' and `ibuffer-sidebar'."
 
 (defun ibuffer-sidebar-refresh-buffer (&rest _)
   "Refresh sidebar buffer."
-  (ibuffer-sidebar-when-let* ((sidebar (ibuffer-sidebar-buffer))
+  (when-let* ((sidebar (ibuffer-sidebar-buffer))
                               (window (get-buffer-window sidebar)))
     (with-selected-window window
       (ibuffer-update nil t)
@@ -417,7 +404,7 @@ If it's not showing, act as `ibuffer-sidebar-toggle-sidebar'."
 (defun ibuffer-sidebar-visit-buffer ()
   "Visit the buffer at point, selecting the appropriate window."
   (interactive)
-  (ibuffer-sidebar-when-let* ((buf (ibuffer-current-buffer t)))
+  (when-let* ((buf (ibuffer-current-buffer t)))
     (select-window
      (if ibuffer-sidebar-open-file-in-most-recently-used-window
          (get-mru-window)
