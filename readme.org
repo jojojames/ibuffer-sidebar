@@ -2,6 +2,7 @@
 
 [[https://github.com/jojojames/ibuffer-sidebar/actions/workflows/ci.yml][file:https://github.com/jojojames/ibuffer-sidebar/actions/workflows/ci.yml/badge.svg]]
 [[https://melpa.org/#/ibuffer-sidebar][file:https://melpa.org/packages/ibuffer-sidebar-badge.svg]]
+[[https://stable.melpa.org/#/ibuffer-sidebar][file:https://stable.melpa.org/packages/ibuffer-sidebar-badge.svg]]
 
 * Screenshots
   [[./screenshots/ibuffer-sidebar.png]]
@@ -10,29 +11,15 @@
 
   [[./screenshots/with-dired-sidebar.png]]
 * Installation
-  #+begin_src emacs-lisp :tangle yes
-    (use-package ibuffer-sidebar
-      :load-path "~/.emacs.d/fork/ibuffer-sidebar"
-      :ensure nil
-      :commands (ibuffer-sidebar-toggle-sidebar)
-      :config
-      (setq ibuffer-sidebar-use-custom-font t)
-      (setq ibuffer-sidebar-face `(:family "Helvetica" :height 140)))
-  #+end_src
-
-  Sidebar can also be toggled together with [[https://github.com/jojojames/dired-sidebar][dired-sidebar]].
-
-  #+begin_src emacs-lisp :tangle yes
-    (defun +sidebar-toggle ()
-      "Toggle both `dired-sidebar' and `ibuffer-sidebar'."
-      (interactive)
-      (dired-sidebar-toggle-sidebar)
-      (ibuffer-sidebar-toggle-sidebar))
-  #+end_src
+** Melpa / Elpa
+   #+begin_src emacs-lisp :tangle yes
+(use-package ibuffer-sidebar
+  :ensure t
+  :commands (ibuffer-sidebar-toggle-sidebar))
+   #+end_src
 * Contributing
   #+begin_src sh :tangle yes
   cask
   make compile
   make test
-  make lint
   #+end_src
