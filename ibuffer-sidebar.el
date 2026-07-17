@@ -5,7 +5,7 @@
 ;; Author: James Nguyen <james@jojojames.com>
 ;; Maintainer: James Nguyen <james@jojojames.com>
 ;; URL: https://github.com/jojojames/ibuffer-sidebar
-;; Version: 0.0.1
+;; Version: 1.0.0
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: ibuffer, files, tools
 ;; HomePage: https://github.com/jojojames/ibuffer-sidebar
