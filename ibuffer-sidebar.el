@@ -1,6 +1,6 @@
 ;;; ibuffer-sidebar.el --- Sidebar for `ibuffer' -*- lexical-binding: t -*-
 
-;; Copyright (C) 2018  Free Software Foundation, Inc.
+;; Copyright (C) 2026  Free Software Foundation, Inc.
 
 ;; Author: James Nguyen <james@jojojames.com>
 ;; Maintainer: James Nguyen <james@jojojames.com>
